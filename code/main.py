@@ -5,16 +5,27 @@ WIKI_API = "https://en.wikipedia.org/w/api.php"
 
 def get_links(page_title):
     """Retrieve links from a Wikipedia page using the MediaWiki API."""
-    
+
     params = {
         "action": "query",
         "format": "json",
         "titles": page_title,
         "prop": "links",
-        "pllimit": "max"
+        "pllimit": "max",
+        "redirects": 1
     }
 
-    response = requests.get(WIKI_API, params=params)
+    headers = {
+        "User-Agent": "WikiNavigationAI/1.0 (student project)"
+    }
+
+    response = requests.get(WIKI_API, params=params, headers=headers)
+
+    # check if request succeeded
+    if response.status_code != 200:
+        print("HTTP error:", response.status_code)
+        return []
+
     data = response.json()
 
     pages = data["query"]["pages"]
@@ -24,7 +35,10 @@ def get_links(page_title):
     for page in pages.values():
         if "links" in page:
             for link in page["links"]:
-                links.append(link["title"])
+                title = link["title"]
+
+                if ":" not in title:
+                    links.append(title)
 
     return links
 
@@ -33,8 +47,12 @@ def main():
     print("Wikipedia Navigation AI")
     print("-----------------------")
 
-    start_page = input("Start page: ")
-    target_page = input("Target page: ")
+    start_page = input("Start page: ").strip()
+    target_page = input("Target page: ").strip()
+
+    # normalize capitalization for Wikipedia titles
+    start_page = start_page[:1].upper() + start_page[1:]
+    target_page = target_page[:1].upper() + target_page[1:]
 
     print("\nFetching links from:", start_page)
 
