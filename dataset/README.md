@@ -1,2 +1,7 @@
-Wikipedia page links will be retrieved dynamically using the MediaWiki API.
-No static dataset is required.
+# Dataset
+
+This project uses the SNAP English Wikipedia hyperlink network (2013).
+
+## Download
+
+https://snap.stanford.edu/data/enwiki-2013.html

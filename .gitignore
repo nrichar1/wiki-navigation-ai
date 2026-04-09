@@ -1,0 +1,8 @@
+# large data files - download links in README
+*.pkl
+*.bz2
+*.gz
+
+# graph cache generated on first run
+snap_cache.pkl
+
